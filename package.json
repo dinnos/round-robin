@@ -18,6 +18,9 @@
     "email": "alonsovla@gmail.com"
   },
   "license": "MIT",
+  "repository": {
+    "url": "git@github.com:dinnos/round-robin.git"
+  },
   "files": [
     "dist/*"
   ],
