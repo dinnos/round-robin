@@ -1,0 +1,28 @@
+{
+  "name": "@dinnosc/round-robin",
+  "version": "1.0.0",
+  "description": "Weighted Round Robin Resource List",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "keywords": [
+    "weighted",
+    "roundrobin",
+    "list"
+  ],
+  "scripts": {
+    "prebuild": "rimraf dist",
+    "build": "tsc"
+  },
+  "author": {
+    "name": "Vladimir Salvador",
+    "email": "alonsovla@gmail.com"
+  },
+  "license": "MIT",
+  "files": [
+    "dist/*"
+  ],
+  "devDependencies": {
+    "rimraf": "^3.0.2",
+    "typescript": "^4.1.5"
+  }
+}
