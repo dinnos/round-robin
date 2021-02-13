@@ -1,5 +1,5 @@
 {
-  "name": "round-robin-list",
+  "name": "@dinnosc/round-robin-list",
   "version": "0.0.0",
   "description": "Weighted Round Robin Resource List",
   "main": "dist/index.js",
