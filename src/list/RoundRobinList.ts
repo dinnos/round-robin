@@ -1,5 +1,6 @@
 import {ListItem} from "./ListItem";
 import { gcd } from "../utils/gcd";
+import _ from 'lodash';
 
 export class RoundRobinList<Type = unknown> {
     private readonly values: Set<Type>;
@@ -28,11 +29,11 @@ export class RoundRobinList<Type = unknown> {
     }
 
     private calculateMaxWeight(): number {
-        return this.weights.reduce((previous, current) => current > previous ? current : previous, 0);
+        return _.max(this.weights) ?? 0;
     }
 
     private calculateGcd(): number {
-        return this.weights.reduce((previous, current) => gcd(previous, current), 0);
+        return _.reduce(this.weights, (prev, curr) => gcd(prev, curr), 0)
     }
 
     private calculateWeight(weight: number) {
@@ -57,32 +58,34 @@ export class RoundRobinList<Type = unknown> {
         this.reset();
     }
 
-    next(index?: number): Type | null {
+    next(index?: number) {
         if (this.size() === 0) {
             return null;
         }
 
         if (index !== undefined) {
             this.current = index;
+            this.currentWeight = this.gcd;
         }
 
-        this.current = (this.current + 1) % this.size();
-        if (this.current === 0) {
-            this.currentWeight -= this.gcd;
+        while (true) {
+            this.current = (this.current + 1) % this.size();
 
-            if (this.currentWeight <= 0) {
-                this.currentWeight = this.maxWeight;
+            if (this.current === 0) {
+                this.currentWeight = this.currentWeight - this.gcd;
+
+                if (this.currentWeight <= 0) {
+                    this.currentWeight = this.maxWeight;
+                }
+            }
+
+            if (this.currentWeight === 0) {
+                return null;
+            }
+
+            if (this.weights[this.current] >= this.currentWeight) {
+                return [...this.values][this.current];
             }
         }
-
-        if (this.currentWeight === 0) {
-            return null;
-        }
-
-        if (this.weights[this.current] >= this.currentWeight) {
-            return [...this.values][this.current];
-        }
-
-        return null;
     }
 }
