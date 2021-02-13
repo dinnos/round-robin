@@ -11,8 +11,7 @@
   ],
   "scripts": {
     "prebuild": "rimraf dist",
-    "build": "tsc",
-    "test": "echo \"Error: no test specified\""
+    "build": "tsc"
   },
   "author": {
     "name": "Vladimir Salvador",
