@@ -1,20 +1,15 @@
 import {ListItem} from "./ListItem";
 import { gcd } from "../utils/gcd";
-import _ from 'lodash';
 
 export class RoundRobinList<Type = unknown> {
-    private readonly values: Set<Type>;
-    private readonly weights: number[];
+    private readonly items: ListItem<Type>[];
     private current: number;
     private currentWeight: number;
     private maxWeight: number;
     private gcd: number;
 
-    constructor(values = new Set<Type>(), weights: number[] = []) {
-        this.ensureSameSize(values, weights);
-
-        this.values = values;
-        this.weights = weights;
+    constructor(items: ListItem<Type>[] = []) {
+        this.items = items;
 
         this.current = -1;
         this.currentWeight = 0;
@@ -22,18 +17,12 @@ export class RoundRobinList<Type = unknown> {
         this.gcd = this.calculateGcd();
     }
 
-    private ensureSameSize(values: Set<Type>, weights: number[]) {
-        if (values.size !== weights.length) {
-            throw new Error('Not equal length');
-        }
-    }
-
     private calculateMaxWeight(): number {
-        return _.max(this.weights) ?? 0;
+        return this.items.reduce((max, { weight }) => max < weight ? weight : max, 0);
     }
 
     private calculateGcd(): number {
-        return _.reduce(this.weights, (prev, curr) => gcd(prev, curr), 0)
+        return this.items.reduce((result, { weight }) => gcd(result, weight), 0);
     }
 
     private calculateWeight(weight: number) {
@@ -48,12 +37,14 @@ export class RoundRobinList<Type = unknown> {
     }
 
     size(): number {
-        return this.values.size;
+        return this.items.length;
     }
 
     add({ value, weight = 0 }: ListItem<Type>): void {
-        this.values.add(value);
-        this.weights.push(this.calculateWeight(weight));
+        this.items.push({
+           value,
+           weight: this.calculateWeight(weight)
+        });
 
         this.reset();
     }
@@ -65,7 +56,7 @@ export class RoundRobinList<Type = unknown> {
 
         if (index !== undefined) {
             this.current = index;
-            this.currentWeight = this.gcd;
+            this.currentWeight = this.items[index].weight;
         }
 
         while (true) {
@@ -83,8 +74,10 @@ export class RoundRobinList<Type = unknown> {
                 return null;
             }
 
-            if (this.weights[this.current] >= this.currentWeight) {
-                return [...this.values][this.current];
+            const { value, weight } = this.items[this.current];
+
+            if (weight >= this.currentWeight) {
+                return value;
             }
         }
     }
