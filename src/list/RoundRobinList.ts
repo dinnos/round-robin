@@ -1,4 +1,4 @@
-import {ListItem} from "./ListItem";
+import { ListItem } from "./ListItem";
 import { gcd } from "../utils/gcd";
 
 export class RoundRobinList<Type = unknown> {
